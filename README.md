@@ -6,6 +6,8 @@ This bot currently caters to a single group that I have. I plan on expanding it 
 
 The code for the bot can be found in the main.py file
 
+Bot link: (to be added)
+
 ## Functionalities so far 
 - Add reminders
 - schedule when to get the reminder
