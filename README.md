@@ -19,5 +19,6 @@ Bot link: (to be added)
 - Multiple reminders for same task
 - post reminders to the chatid that started it
 - get reminders functionality could be better and more useful
+- handle errors in a better way
 - change reminders
 - cancel reminders
