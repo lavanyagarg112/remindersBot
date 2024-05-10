@@ -11,8 +11,10 @@ Bot link: (to be added)
 ## Functionalities so far 
 - Add reminders
 - schedule when to get the reminder
+- send a personal message also to the user (not sure if it works with people who have never used the bot before)
 
 ## Functionalities to add
 - Multiple reminders for same task
 - post reminders to the chatid that started it
 - show reminders segregated by user
+- get reminders functionality could be better and more useful
