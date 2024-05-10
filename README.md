@@ -16,6 +16,7 @@ Bot link: (to be added)
 
 ## Functionalities to add
 - personal message reminder... require user to /start the bot before adding a reminder
+- make the defaults better
 - Multiple reminders for same task
 - post reminders to the chatid that started it
 - get reminders functionality could be better and more useful
