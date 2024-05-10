@@ -11,10 +11,10 @@ import os
 
 load_dotenv() 
 
-TOKEN = os.getenv('BOT_TOKEN')
-BOT_USERNAME = os.getenv('BOT_USERNAME')
+TOKEN: Final = os.getenv('BOT_TOKEN')
+BOT_USERNAME: Final = os.getenv('BOT_USERNAME')
 #groq
-API_KEY = os.getenv('GROQ_API')
+API_KEY: Final = os.getenv('GROQ_API')
 
 def draft_message(content, role='user'):
     return {
