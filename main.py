@@ -74,7 +74,7 @@ def send_personal(message, chat_id):
 # Define conversation states
 GET_REMINDER_TEXT = 0
 
-messages = ["here are the reminders: \n"]
+# messages = ["here are the reminders: \n"]
 
 # dictionary to store messages
 # can segregate by userid also if needed for better segregation
@@ -126,7 +126,7 @@ async def get_reminder_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
     messages_userid[userid].append(user_text)
 
-    messages.append("USERNAME: " + username + "\n REMINDER: " + user_text)
+    # messages.append("USERNAME: " + username + "\n REMINDER: " + user_text)
     messages_llama.append(draft_message(prompt + user_text))
     print(messages_llama)
 
