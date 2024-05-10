@@ -31,7 +31,8 @@ messages_llama = [
 
 client = Groq(api_key=API_KEY)
 
-prompt = "only give me the date and time from the text i provide without any additional text in YYYY-MM-DD and hour:minute format, take 2024 as default if not specified. here is the text: "
+prompt = "only give me the date and time from the text i provide without any additional text in YYYY-MM-DD and \
+    hour:minute format, take 2024 as default if not specified. here is the text: "
 
 
 
@@ -127,7 +128,10 @@ async def get_reminder_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     messages_userid[userid].append(user_text)
 
     # messages.append("USERNAME: " + username + "\n REMINDER: " + user_text)
-    messages_llama.append(draft_message(prompt + user_text))
+    date_time = update.message.date.strftime('%Y-%m-%d %H:%M:%S')
+    print(date_time)
+    messages_llama.append(draft_message(prompt + user_text + " . now, ONLY if date not specified in the prev text, take today's date from: " + date_time
+                                        + ",remember, only provide date and time, in the format. if time and date are specified in prev text, then take those"))
     print(messages_llama)
 
     chat_completion = client.chat.completions.create (
