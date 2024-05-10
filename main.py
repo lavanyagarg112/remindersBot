@@ -62,6 +62,15 @@ def send_message(message, chat_id, message_id):
     except Exception as e:
         print(e)
 
+def send_personal(message, chat_id):
+    API_URL = os.getenv('API_URL_FINAL')
+    try:
+        response = requests.post(API_URL, json={"chat_id": chat_id, "text": message})
+        print(response.text)
+
+    except Exception as e:
+        print(e)
+
 # Define conversation states
 GET_REMINDER_TEXT = 0
 
@@ -75,7 +84,7 @@ def getMessages(messages):
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id_current = update.effective_chat.id  # This gets the chat ID of the current chat, including topics
+    chat_id_current = update.effective_chat.id  # This gets the chat ID of the current chat
     print(f"Received message from chat ID: {chat_id_current}")
     await update.message.reply_text('Hello, thanks for being here!')
 
@@ -91,9 +100,12 @@ async def get_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def get_reminder_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(update)
+    username = update.message.from_user.username
+    userid = update.message.from_user.id # maybe send reminder to the person?
     user_text = update.message.text
     context.user_data['reminder_text'] = user_text
-    messages.append(user_text)
+    messages.append("USERNAME: " + username + "\n REMINDER: " + user_text)
     messages_llama.append(draft_message(prompt + user_text))
     print(messages_llama)
 
@@ -111,7 +123,8 @@ async def get_reminder_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # see how to make it work with the handler.
 
     run_time = datetime.strptime(date_to_run, '%Y-%m-%d %H:%M')
-    scheduler.add_job(send_message, 'date', run_date=run_time, args=["REMINDER: " + user_text, chat_id_final, message_id_final])
+    scheduler.add_job(send_message, 'date', run_date=run_time, args=["USERNAME: " + username + "\n REMINDER: " + user_text, chat_id_final, message_id_final])
+    scheduler.add_job(send_personal, 'date', run_date=run_time, args=["REMINDER: " + user_text, userid])
 
     await update.message.reply_text(f'Reminder added: {user_text}')
     return ConversationHandler.END
