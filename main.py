@@ -76,10 +76,24 @@ GET_REMINDER_TEXT = 0
 
 messages = ["here are the reminders: \n"]
 
+# dictionary to store messages
+# can segregate by userid also if needed for better segregation
+messages_userid = {
+
+}
+
 def getMessages(messages):
     string = ""
     for mess in messages:
         string += mess + '\n'
+    return string
+
+def getMessages_dict(messages):
+    string = ""
+    for user in messages:
+        for mess in messages[user]:
+            string += mess + '\n'
+        string += '\n'
     return string
 
 
@@ -96,15 +110,22 @@ async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return GET_REMINDER_TEXT
 
 async def get_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(getMessages(messages))
+    await update.message.reply_text(getMessages_dict(messages_userid))
 
 
 async def get_reminder_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(update)
     username = update.message.from_user.username
     userid = update.message.from_user.id # maybe send reminder to the person?
+
     user_text = update.message.text
     context.user_data['reminder_text'] = user_text
+
+    if userid not in messages_userid:
+        messages_userid[userid] = [("USERNAME: " + username + "\n")]
+        
+    messages_userid[userid].append(user_text)
+
     messages.append("USERNAME: " + username + "\n REMINDER: " + user_text)
     messages_llama.append(draft_message(prompt + user_text))
     print(messages_llama)
