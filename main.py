@@ -82,11 +82,11 @@ messages_userid = {
 
 }
 
-def getMessages(messages):
-    string = ""
-    for mess in messages:
-        string += mess + '\n'
-    return string
+# def getMessages(messages):
+#     string = ""
+#     for mess in messages:
+#         string += mess + '\n'
+#     return string
 
 def getMessages_dict(messages):
     string = ""
@@ -147,7 +147,7 @@ async def get_reminder_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     scheduler.add_job(send_message, 'date', run_date=run_time, args=["USERNAME: " + username + "\n REMINDER: " + user_text, chat_id_final, message_id_final])
     scheduler.add_job(send_personal, 'date', run_date=run_time, args=["REMINDER: " + user_text, userid])
 
-    await update.message.reply_text(f'Reminder added: {user_text}')
+    await update.message.reply_text(f'Reminder added: {user_text} \n Scheduled for: {date_to_run}')
     return ConversationHandler.END
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
