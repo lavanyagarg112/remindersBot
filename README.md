@@ -23,3 +23,8 @@ Bot link: (to be added)
 - handle errors in a better way
 - change reminders
 - cancel reminders
+
+## Requested functionalities
+- ask for daily todos
+- send daily todos
+- bothers when todo not completed... so until mark as completed, keep asking
