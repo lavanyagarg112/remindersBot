@@ -74,6 +74,7 @@ def send_personal(message, chat_id):
 
 # Define conversation states
 GET_REMINDER_TEXT = 0
+GET_DAILY_TODOS = 0
 
 # messages = ["here are the reminders: \n"]
 
@@ -112,6 +113,41 @@ async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def get_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(getMessages_dict(messages_userid))
+
+async def daily_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('Please give me your daily todos')
+    return GET_DAILY_TODOS
+
+async def get_daily_todos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    username = update.message.from_user.username
+    userid = update.message.from_user.id
+    user_text = update.message.text
+    context.user_data['daily_text'] = user_text
+
+    daily_prompt = "extract all the tasks from the given text. separate the tasks by newline. dont add any numbers or bullets etc. here is the text: " + user_text
+    messages_llama.append(daily_prompt)
+
+    chat_completion = client.chat.completions.create (
+    temperature = 1.0,
+    n=1,
+    model="llama3-8b-8192",
+    max_tokens=1000,
+    messages=messages_llama
+    )
+
+    tasks = chat_completion.choices[0].message.content
+
+    task_list = tasks.splitlines()
+
+    if userid not in messages_userid:
+        messages_userid[userid] = [("USERNAME: " + username + "\n")]
+
+    for i in task_list:
+        print(i)
+        messages_userid[userid].append(i)
+
+    await update.message.reply_text(f'Reminders added: \n{user_text}')
+    return ConversationHandler.END
 
 
 async def get_reminder_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -204,6 +240,11 @@ if __name__ == '__main__':
     conversation_handler = ConversationHandler(
         entry_points=[CommandHandler('add', add_command)],
         states={GET_REMINDER_TEXT: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_reminder_text)]},
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+    conversation_handler = ConversationHandler(
+        entry_points=[CommandHandler('daily', daily_command)],
+        states={GET_DAILY_TODOS: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_daily_todos)]},
         fallbacks=[CommandHandler('cancel', cancel)]
     )
     app.add_handler(conversation_handler)
